@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Path = System.IO.Path;
 
 namespace RoslynWebEngine.Browser
 {
@@ -41,7 +42,8 @@ namespace RoslynWebEngine.Browser
 
         void WebBrowser_DocumentCompleted(object sender, System.Windows.Forms.WebBrowserDocumentCompletedEventArgs e)
         {
-            engine = new WebEngine(WebBrowser.Document);
+            string webRoot = Path.Combine(Directory.GetCurrentDirectory(),"SampleWebApp");
+            engine = new WebEngine(WebBrowser.Document, webRoot);
         }
     }
 }
