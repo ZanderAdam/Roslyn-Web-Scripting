@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -21,12 +22,26 @@ namespace RoslynWebEngine.Browser
     /// </summary>
     public partial class MainWindow : Window
     {
+        WebEngine engine;
+
         public MainWindow()
         {
             InitializeComponent();
 
             var curDir = Directory.GetCurrentDirectory();
             WebBrowser.Navigate(new Uri(String.Format("file:///{0}/SampleWebApp/index.html", curDir)));
+
+            SetupBrowserEvents();
+        }
+
+        private void SetupBrowserEvents()
+        {
+            WebBrowser.DocumentCompleted += WebBrowser_DocumentCompleted;
+        }
+
+        void WebBrowser_DocumentCompleted(object sender, System.Windows.Forms.WebBrowserDocumentCompletedEventArgs e)
+        {
+            engine = new WebEngine(WebBrowser.Document);
         }
     }
 }
