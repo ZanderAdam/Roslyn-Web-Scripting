@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,19 +19,34 @@ namespace RoslynWebEngine
         public WebEngine(HtmlDocument document)
         {
             _document = document;
-            session = engine.CreateSession();
+
+            session = engine.CreateSession(document);
+            session.AddReference("System.Windows.Forms");
 
             RegisterEvents();
+
+            var scriptFile = File.ReadAllText(@".\SampleWebApp\Scripts\index.csx");
+            session.Execute(scriptFile);
         }
 
         private void RegisterEvents()
         {
-            _document.Body.MouseDown += Body_MouseDown;
+            _document.MouseUp += Body_MouseDown;
         }
 
         private void Body_MouseDown(object sender, HtmlElementEventArgs e)
         {
-            var element = (HtmlElement)sender;
+            var element = _document.ActiveElement;
+
+            if (element == null)
+                return;
+
+            string clickEvent = element.GetAttribute("onClickEvent");
+
+            if (clickEvent != "")
+            {
+                session.Execute(clickEvent);
+            }
         }
     }
 }
