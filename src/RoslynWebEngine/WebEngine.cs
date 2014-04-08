@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Roslyn.Scripting.CSharp;
 
 namespace RoslynWebEngine
 {
@@ -11,9 +12,13 @@ namespace RoslynWebEngine
     {
         private readonly HtmlDocument _document;
 
+        ScriptEngine engine = new ScriptEngine();
+        Roslyn.Scripting.Session session;
+
         public WebEngine(HtmlDocument document)
         {
             _document = document;
+            session = engine.CreateSession();
 
             RegisterEvents();
         }
